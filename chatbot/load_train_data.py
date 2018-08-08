@@ -207,8 +207,13 @@ def load_data():
 
     length = len(sorted(df_train_inputs['input'],key=len, reverse=True)[0])
     max_sent_len = 20
+    # encoder_input_data=np.array([xi+[0]*(length-len(xi)) for xi in df_train_inputs['input']])
+    # encoder_input_data = encoder_input_data[:38080, :max_sent_len]
+
     encoder_input_data=np.array([xi+[0]*(length-len(xi)) for xi in df_train_inputs['input']])
     encoder_input_data = encoder_input_data[:38080, :max_sent_len]
+    # encoder_input_data = np.reshape(encoder_input_data, (38080, 20, 1))
+
     print("\n\nencoder_input_data.shape : ", encoder_input_data.shape)
     print("\n\nencoder_input_data[:5] : ", encoder_input_data[:5])
 
@@ -233,8 +238,8 @@ def load_data():
     decoder_target_data=np.array([xi+[0]*(length-len(xi)) for xi in df_tmp])
 
     decoder_target_data = decoder_target_data[:38080, :max_sent_len]
-    # decoder_target_data = np.expand_dims(decoder_target_data, -1)
-    decoder_target_data = tf.reshape(decoder_target_data, [38080,-1,20])
+    decoder_target_data = np.expand_dims(decoder_target_data, -1)
+    # decoder_target_data = np.reshape(decoder_target_data, (38080,-1,20))
 
     print("\n\ndecoder_target_data.shape : ", decoder_target_data.shape)
     print("\n\ndecoder_target_data[:5] : ", decoder_target_data[:5])

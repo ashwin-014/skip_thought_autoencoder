@@ -16,10 +16,10 @@ max_sent_len = 20
 batch_size = 32
 epsilon_std = 1.0
 
-encoder_inputs = Input(shape=(max_sent_len, 1), name='enc_input')
+encoder_inputs = Input(shape=(None, ), name='enc_input')
 
-# shared_emb = Embedding(vocabulary_size, embedding_size, input_length=20, name='shared_emb', mask_zero=True)
-# x = shared_emb(encoder_inputs)
+shared_emb = Embedding(vocabulary_size, embedding_size, input_length=20, name='shared_emb', mask_zero=True)
+x = shared_emb(encoder_inputs)
 
 h = LSTM(intermediate_dim, 
 #                return_state=True,
@@ -28,7 +28,7 @@ h = LSTM(intermediate_dim,
 #             merge_mode='concat',
             input_shape = ( max_sent_len, 1),
             name='enc_lstm'
-            )(encoder_inputs)
+            )(x)
 
 h= Dropout(0.2)(h)
 # h = LSTM(intermediate_dim)(x)
@@ -52,16 +52,16 @@ z = Lambda(sampling, output_shape=(latent_dim,))([z_mean, z_log_sigma])
 input_dim = 1
 timesteps = 20
 # decoder
-decoder_h = LSTM(intermediate_dim, return_state = False, return_sequences =True, input_shape = ( max_sent_len, 1),name='dec_lstm_h')
+# decoder_h = LSTM(intermediate_dim, return_state = False, return_sequences =True, input_shape = ( max_sent_len, 1),name='dec_lstm_h')
 
 # changed : 
-# decoder_h = Dense(intermediate_dim, name='dec_dense_h') # , return_state = False, return_sequences =True,
+decoder_h = Dense(intermediate_dim, name='dec_dense_h') # , return_state = False, return_sequences =True,
 
 decoder_mean = LSTM(input_dim, return_state = False, return_sequences= True,input_shape = ( max_sent_len, 1), name='dec_lstm_mean')
 # decoder_mean = Dense(vocabulary_size, name='dec_output', activation='softmax')
 
 decoded_h = RepeatVector(timesteps)(z)
-decoded_h = decoder_h(decoded_h)
+# decoded_h = decoder_h(decoded_h)
 decoded_mean = decoder_mean(decoded_h)
 
 # changed :

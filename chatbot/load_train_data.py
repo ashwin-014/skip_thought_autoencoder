@@ -6,7 +6,7 @@ import json
 import pickle
 import re
 
-
+import tensorflow as tf
 from keras.models import Model, load_model
 from keras.layers import Input, Dense, LSTM, Embedding, TimeDistributed
 import pickle
@@ -235,7 +235,7 @@ def load_data():
     decoder_target_data = decoder_target_data[:38080, :max_sent_len]
     # decoder_target_data = np.expand_dims(decoder_target_data, -1)
     decoder_target_data = tf.reshape(decoder_target_data, [38080,-1,20])
-    
+
     print("\n\ndecoder_target_data.shape : ", decoder_target_data.shape)
     print("\n\ndecoder_target_data[:5] : ", decoder_target_data[:5])
 

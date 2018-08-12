@@ -201,6 +201,8 @@ def load_data():
 
     df_train_inputs = pd.concat(train_list, ignore_index=True)
 
+    df_train_inputs.to_csv('./data/df_train_inputs.csv', encoding='utf-8', index=False)
+
     print("\n\ndf_train_inputs.shape : ", df_train_inputs.shape)
     assert df_train_data.shape == df_train_inputs.shape
     print("\n\ndf_train_inputs.head() : ", df_train_inputs.head())

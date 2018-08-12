@@ -16,7 +16,7 @@ num_encoder_features = 1
 def load_model():
     
 # To change
-    encoder_inputs = Input(shape=(None, num_encoder_features), name='enc_input')
+    encoder_inputs = Input(shape=(max_sent_len, ), name='enc_input')
     # -------------
 
     # shared_emb = Embedding(input_dim = vocabulary_size, output_dim = embedding_size, input_length=20, name='shared_emb')
@@ -38,7 +38,7 @@ def load_model():
     encoder_states = [encoder_outputs[1], encoder_outputs[2]]
 
     # Decoder
-    decoder_inputs = Input(shape=(None, num_encoder_features), name='dec_input')
+    decoder_inputs = Input(shape=(max_sent_len, ), name='dec_input')
     x = shared_emb(decoder_inputs)
     decoder_lstm = LSTM(embedding_size, 
                 return_sequences=True, 
@@ -46,7 +46,7 @@ def load_model():
                 name='dec_lstm'
                 )
     decoder_op, _, _ = decoder_lstm(x, initial_state=encoder_states)
-    decoder_outputs = TimeDistributed(Dense(1, activation='softmax', name='dec_op_td'))(decoder_op)
+    decoder_outputs = TimeDistributed(Dense(vocabulary_size, activation='softmax', name='dec_op_td'))(decoder_op)
     # decoder_outputs = Dense(vocabulary_size, activation='softmax', name='dec_output')(decoder_op)
     # decoder_outputs = Dense(vocabulary_size, activation='softmax', name='dec_outputs')(decoder_outputs)
 
